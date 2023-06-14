@@ -3,6 +3,8 @@
     // Represents the player in the game.
     public class Hero
     {
+        public delegate void CallbackDelegate(Hero hero);
+
         // Creates a new player that starts at the given location.
         public Hero(Location start) => Location = start;
         // Contains all the commands that a player can access.
@@ -29,13 +31,19 @@
         // Explains why a player died.
         public string CauseOfDeath { get; private set; } = "";
 
-        public bool IsPoisoned { get; set; } = false;
-        public int StillCanPlaySteps { get; set; }
-
         public void Kill(string cause)
         {
             IsAlive = false;
             CauseOfDeath = cause;
+        }
+
+        public bool IsPoisoned { get; set; } = false;
+        public int StillCanPlaySteps { get; set; } = 0;
+        public CallbackDelegate Callback { get; set; }
+
+        public void HandleCallback()
+        {
+            Callback?.Invoke(this);
         }
     }
 }

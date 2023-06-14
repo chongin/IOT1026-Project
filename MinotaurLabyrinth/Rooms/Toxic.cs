@@ -25,11 +25,11 @@
             if (IsActive)
             {
                 ConsoleHelper.WriteLine("You walk into the Toxic room, and you have to play a dice game.If you win, nothing happen, If you lost, you would get punishment!", ConsoleColor.Red);
-                ConsoleHelper.WriteLine("Choose Large, Small, after that will dice 3 dices, and calculate the result.", ConsoleColor.Gray);
+                ConsoleHelper.WriteLine("Choose large, small, after that will dice 3 dices, and calculate the result.", ConsoleColor.Gray);
                 bool smallFlag = Console.ReadLine() switch
                 {
-                    "Small" => true,
-                    "Large" => false,
+                    "small" => true,
+                    "large" => false,
                     _ => false
                 };
 
@@ -46,13 +46,17 @@
 
                 if (winFlag)
                 {
-                    ConsoleHelper.WriteLine("Congrat you win the game, nothing will happen.", ConsoleColor.Yellow);
+                    ConsoleHelper.WriteLine("Congrat you win the dice game, nothing will happen.", ConsoleColor.Yellow);
                 }
                 else
                 {
                     ConsoleHelper.WriteLine($"Be careful, you can play at most {MAX_PLAY_STEPS} steps from now.", ConsoleColor.Red);
                     hero.IsPoisoned = true;
                     hero.StillCanPlaySteps = MAX_PLAY_STEPS;
+
+                    //set the callback for the game to call when game ended.
+                    //because this room already finish, but the game keep going.
+                    hero.Callback = HandleCauseDeth;
                 }
 
                 IsActive = false;
@@ -99,10 +103,16 @@
             int number = 0;
             for (int i = 0; i < 3; ++i)
             {
-                number += RandomNumberGenerator.Next(0, 6);
+                number += RandomNumberGenerator.Next(1, 6);
             }
 
             return number;
+        }
+
+        //handle call back when the game ended.
+        public static void HandleCauseDeth(Hero hero)
+        {
+            hero.Kill("You have gotton a toxic and died.");
         }
     }
 }

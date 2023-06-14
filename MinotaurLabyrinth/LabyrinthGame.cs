@@ -25,8 +25,11 @@
             // This is the game loop. Each turn runs through this while loop once.
             while (!Hero.IsVictorious && Hero.IsAlive)
             {
-                if (Hero.IsPoisoned && Hero.StillCanPlaySteps == 0)
+                //add new logic to check here got poison or not.
+                if (Hero.IsPoisoned && Hero.StillCanPlaySteps < 0)
                 {
+                    //handle the callback that the room set it.
+                    Hero.HandleCallback();
                     ConsoleHelper.WriteLine($"{Hero.CauseOfDeath}\nYou lost.", ConsoleColor.Red);
                     return;
                 }
@@ -48,7 +51,7 @@
 
                     if (Hero.IsPoisoned)
                     {
-                        Hero.StillCanPlaySteps--;
+                        Hero.StillCanPlaySteps--; //current command already decrease 1, so need to check StillCanPlaySteps < 0
                     }
                 }
                 Display.ScreenUpdate(Hero, Map);
