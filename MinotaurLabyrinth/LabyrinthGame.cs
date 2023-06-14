@@ -25,6 +25,12 @@
             // This is the game loop. Each turn runs through this while loop once.
             while (!Hero.IsVictorious && Hero.IsAlive)
             {
+                if (Hero.IsPoisoned && Hero.StillCanPlaySteps == 0)
+                {
+                    ConsoleHelper.WriteLine($"{Hero.CauseOfDeath}\nYou lost.", ConsoleColor.Red);
+                    return;
+                }
+
                 ICommand command = GetCommand();
                 Console.Clear();
                 if (Hero.IsAlive) // Player did not quit the game
@@ -38,6 +44,11 @@
                     {
                         currentLocation = Hero.Location;
                         CurrentRoom.Activate(Hero, Map);
+                    }
+
+                    if (Hero.IsPoisoned)
+                    {
+                        Hero.StillCanPlaySteps--;
                     }
                 }
                 Display.ScreenUpdate(Hero, Map);
@@ -54,7 +65,7 @@
             ICommand? command = null;
             do
             {
-                ConsoleHelper.Write("What do you want to do? ", ConsoleColor.White);
+                ConsoleHelper.Write("What do you want to do? ", ConsoleColor.Black);
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 string? input = Console.ReadLine();
 
