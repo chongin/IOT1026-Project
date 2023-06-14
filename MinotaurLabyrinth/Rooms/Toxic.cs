@@ -5,7 +5,7 @@
     /// </summary>
     public class Toxic : Room
     {
-        const int MAX_PLAY_STEPS = 3;
+        const int MAX_PLAY_STEPS = 5;
         static Toxic()
         {
             RoomFactory.Instance.Register(RoomType.Toxic, () => new Toxic());

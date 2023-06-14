@@ -21,3 +21,7 @@ Write a description of your `Room` and `Monster` class here.
 [![ci](https://github.com/chongin/IOT1026-Project/actions/workflows/ci.yml/badge.svg)](https://github.com/chongin/IOT1026-Project/actions/workflows/ci.yml)
 
 [![formatting](https://github.com/chongin/IOT1026-Project/actions/workflows/formatting.yml/badge.svg)](https://github.com/chongin/IOT1026-Project/actions/workflows/formatting.yml)
+
+
+# Add Toxic room summary
+I add a toxic room. When hero walk into this room, he will play a dice game. If he win, nothing will happen, if he lost, he can at most play n(config) more steps, then he will die. He should leave the entrance before n steps.

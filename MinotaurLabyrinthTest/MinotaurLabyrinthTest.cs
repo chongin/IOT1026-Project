@@ -10,5 +10,12 @@ namespace MinotaurLabyrinthTest
         {
             Assert.AreNotSame(1, 2);
         }
+
+
+        [TestMethod]
+        public void Test()
+        {
+            Assert.AreNotSame(1, 2);
+        }
     }
 }
