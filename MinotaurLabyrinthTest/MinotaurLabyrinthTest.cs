@@ -88,7 +88,7 @@ namespace MinotaurLabyrinthTest
             mock.Protected().Setup<int>("Dice3Dices").Returns(11);
             mock.Protected().Setup<bool>("GetUserSelectOption").Returns(false);
             var toxic = mock.Object;
-           
+            
             (Map map, Hero hero) = LabyrinthCreator.InitializeMap(Size.Small);
             toxic.Activate(hero, map);
 
