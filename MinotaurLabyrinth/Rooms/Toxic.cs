@@ -133,7 +133,7 @@
         //handle call back when the game ended.
         public static void HandleCauseDeth(Hero hero)
         {
-            hero.Kill($"You have gotton a toxic and died because You cannot exit this labyrinth before {MAX_PLAY_STEPS}.");
+            hero.Kill($"You have gotton a toxic and died because You cannot exit this labyrinth before {MAX_PLAY_STEPS} steps.");
         }
     }
 }

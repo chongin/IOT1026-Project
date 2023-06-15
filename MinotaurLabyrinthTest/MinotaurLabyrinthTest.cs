@@ -82,7 +82,7 @@ namespace MinotaurLabyrinthTest
 
 
         [TestMethod]
-        public void Test_Active_WinGame()
+        public void Test_Activate_WinGame()
         {
             var mock = new Mock<Toxic>() { CallBase = true }; //need to set Callbase = true, then can call the override/virtual method
             mock.Protected().Setup<int>("Dice3Dices").Returns(11);
@@ -97,7 +97,7 @@ namespace MinotaurLabyrinthTest
         }
 
         [TestMethod]
-        public void Test_Active_LostGame()
+        public void Test_Activate_LostGame()
         {
             var mock = new Mock<Toxic>() { CallBase = true }; //need to set Callbase = true, then can call the override/virtual method
             mock.Protected().Setup<int>("Dice3Dices").Returns(11);
