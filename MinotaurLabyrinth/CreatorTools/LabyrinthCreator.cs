@@ -109,6 +109,12 @@
             Location minotaurLocation = ProceduralGenerator.GetRandomLocation();
             Room room = map.GetRoomAtLocation(minotaurLocation);
             room.AddMonster(new Minotaur());
+
+            Location fireDragonLocation = ProceduralGenerator.GetRandomLocation();
+            Room dragonRoom = map.GetRoomAtLocation(fireDragonLocation);
+            FireDragon dragon = new FireDragon(fireDragonLocation);
+            room.AddMonster(dragon);
+            map.AddDestoryables(dragon);
         }
     }
 }

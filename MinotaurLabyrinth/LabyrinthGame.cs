@@ -53,6 +53,11 @@
                     {
                         Hero.StillCanPlaySteps--; //current command already decrease 1, so need to check StillCanPlaySteps < 0
                     }
+
+                    if (command is BaseMoveCommand) // only excute when command is a BaseMoveCommand
+                    {
+                        Map.ExcuteDestoryRooms(Hero);
+                    }
                 }
                 Display.ScreenUpdate(Hero, Map);
             }

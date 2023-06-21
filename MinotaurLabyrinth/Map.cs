@@ -6,6 +6,8 @@
         // The rooms are stored in a 2D array. A 3D array would allow for multiple levels in the dungeon. 
         private readonly Room[,] _rooms;
 
+        private readonly List<IDestoryable> _destoryables = new List<IDestoryable>();
+
         // The total number of rows in this specific game world.
         public int Rows { get; }
 
@@ -31,11 +33,24 @@
             }
         }
 
+        public void AddDestoryables(IDestoryable destoryable)
+        {
+            _destoryables.Add(destoryable);
+        }
+
+        public void ExcuteDestoryRooms(Hero hero)
+        {
+            foreach (var destroyable in _destoryables)
+            {
+                destroyable.DestoryRoom(hero, this);
+            }
+        }
+
         // Returns the type of room at a specific location -> returns a Wall RoomType if the location is off the map
         public RoomType GetRoomTypeAtLocation(Location location) => GetRoomAtLocation(location).Type;
 
         // Returns a reference to the room object at a specific location. If the location is off the map, a Wall will be returned
-        public Room GetRoomAtLocation(Location location) => IsOnMap(location) ? _rooms[location.Row, location.Column] : new Wall();
+        public Room GetRoomAtLocation(Location location) => IsOnMap(location) ? _rooms[location.Row, location.Column] : new      Wall();
 
         /// <summary>
         /// Checks if a given location has a neighboring location with the specified room type.

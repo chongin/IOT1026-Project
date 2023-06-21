@@ -12,6 +12,9 @@
 
         private Monster? _monster;
 
+        public RoomState State { get; private set; } = RoomState.Normaled;
+        public string _destoryReason = "";
+
         /// <summary>
         /// Gets the room type.
         /// </summary>
@@ -75,7 +78,22 @@
             if (_monster != null)
                 return _monster.Display();
             else
-                return new DisplayDetails("[ ]", ConsoleColor.Gray);
+            {
+                if (State != RoomState.Normaled)
+                {
+                    return new DisplayDetails("[#]", ConsoleColor.DarkRed);
+                }
+                else
+                {
+                    return new DisplayDetails("[ ]", ConsoleColor.Gray);
+                }
+            }
+        }
+
+        public void Destory(string reason)
+        {
+            State = RoomState.Destoryed;
+            _destoryReason = reason;
         }
     }
 }
