@@ -97,30 +97,40 @@
         }
 
         public bool CanOccupyByMonistor()
-        {
-            return _monster == null;
+        {//even the room was destoryed, the monster aslo can occupy, because the room was destoryed by dragon, so I think it make sense.
+            if (_monster != null)
+                return false;
+
+            if (Type == RoomType.Room)
+            {
+                return true;
+            }
+            else if (Type == RoomType.Wall)
+            {
+                return false;
+            }
+            else
+            {//other feature rooms, if the feature room already activate, I think the monstor also can occupy, because the room already nothing inside it.
+                return !IsActive;
+            }
         }
 
         public bool CanBeDestoryed()
         {
             if (State == RoomState.Destoryed) //cannot be destoryed 2 times
+                return false;
+
+            if (Type == RoomType.Room)
+            {
+                return true;
+            }
+            else if (Type == RoomType.Wall)
             {
                 return false;
             }
             else
-            {
-                if (Type == RoomType.Room)
-                {
-                    return true;
-                }
-                else if (Type == RoomType.Wall)
-                {
-                    return false;
-                }
-                else
-                {//other feature rooms
-                    return !IsActive;
-                }
+            {//other feature rooms
+                return !IsActive;
             }
         }
 
