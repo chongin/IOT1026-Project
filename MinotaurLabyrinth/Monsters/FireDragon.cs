@@ -64,28 +64,28 @@ namespace MinotaurLabyrinth
         public void DestoryRoom(Hero hero, Map map)
         {
             List<Location> fireableLocations = GetFireableLocations(hero, map, _fireableDistance);
-            List<Room> emptyRooms = new List<Room>();
+            List<Room> protentialToBeDestoryedRooms = new List<Room>();
             foreach (var location in fireableLocations)
             {
                 var room = map.GetRoomAtLocation(location);
-                if (!room.IsActive && room.State != RoomState.Destoryed) //it can destory empty room and the room that are not active.
+                if (room.CanBeDestoryed())
                 {
-                    emptyRooms.Add(room);
+                    protentialToBeDestoryedRooms.Add(room);
                 }
                 else
                 {
-                    Console.WriteLine($"This room is not available to destory row, cloumn: [{location.Row}, {location.Column}, type: {room.Type}, state: {room.State}]");
+                    Console.WriteLine($"This room is not available to destory row, cloumn: [{location.Row}, {location.Column}, type: {room.Type}, state: {room.State} Active:{room.IsActive}, Monster:{room._monster}]");
                 }
             }
 
-            if (emptyRooms.Count == 0)
+            if (protentialToBeDestoryedRooms.Count == 0)
             {
                 ConsoleHelper.WriteLine("No rooms can be destoryed, you're waitting to burn.", ConsoleColor.DarkGreen);
             }
             else
             {
-                int index = RandomNumberGenerator.Next(0, emptyRooms.Count);
-                emptyRooms[index].Destory("Fire");
+                int index = RandomNumberGenerator.Next(0, protentialToBeDestoryedRooms.Count);
+                protentialToBeDestoryedRooms[index].Destory("Fire");
 
                 if (IsSurroundByFire(hero, map))
                 {
@@ -97,8 +97,8 @@ namespace MinotaurLabyrinth
                     _fireCount += 1;
                     if (_fireCount % 3 == 0)
                     {
-                        //when accumlate enought fire, then can case a spell. 
-                        CaseSpell();
+                        //when accumlate enought fire, then can upgrade its level. 
+                        LevelUp();
                     }
                 }
             }
@@ -106,9 +106,13 @@ namespace MinotaurLabyrinth
         }
 
         //decrease the fireable distance to make the fire more close to hero.
-        public void CaseSpell() 
+        public void LevelUp() 
         {
-            _fireableDistance = Math.Clamp(_fireableDistance - 1, 1, _fireableDistance - 1);
+            if (_fireableDistance > 1)
+            {
+                _fireableDistance -= 1;
+            }
+            //_fireableDistance = Math.Clamp(_fireableDistance - 1, 1, _fireableDistance - 1);
         }
 
         /// <summary>
@@ -121,7 +125,7 @@ namespace MinotaurLabyrinth
         {
             if (heroDistance == 1)
             {
-                ConsoleHelper.WriteLine("You hear growling and stomping. The minotaur is nearby!", _displayColor);
+                ConsoleHelper.WriteLine("You hear a sound of glass breaking. The smasher is nearby!", _displayColor);
                 return true;
             }
             return false;
@@ -131,9 +135,12 @@ namespace MinotaurLabyrinth
         /// Displays the current state of the minotaur.
         /// </summary>
         /// <returns>Returns a DisplayDetails object containing the minotaur's display information.</returns>
-        public override DisplayDetails Display()
+        public override DisplayDetails Display(bool isOccupyInADestoryedRoom = false)
         {
-            return new DisplayDetails("[D]", _displayColor);
+            if (isOccupyInADestoryedRoom)
+                return new DisplayDetails("<D>", _displayColor);
+            else
+                return new DisplayDetails("[D]", _displayColor);
         }
 
         public List<Location> GetFireableLocations(Hero hero, Map map, int distance)
@@ -148,7 +155,7 @@ namespace MinotaurLabyrinth
                         continue;
                     }
                     int interval = Math.Abs(row - hero.Location.Row) + Math.Abs(col - hero.Location.Column);
-                    if (interval < distance)
+                    if (interval <= distance)
                     {
                         locations.Add(new Location(row, col));
                     }
@@ -159,7 +166,7 @@ namespace MinotaurLabyrinth
 
         public Location?  GetProtentialLocationForMonster(Map map)
         {
-            List<Location> availableLocations = new();
+            List<Location> protentialLocations = new();
             for (int row = 0; row < map.Rows; ++row)
             {
                 for (int col = 0; col < map.Columns; ++col)
@@ -172,17 +179,17 @@ namespace MinotaurLabyrinth
                     var room = map.GetRoomAtLocation(location);
                     if (room.CanOccupyByMonistor())
                     {
-                        availableLocations.Add(location);
+                        protentialLocations.Add(location);
                     }
                 }
             }
 
-            if (availableLocations.Count == 0)
+            if (protentialLocations.Count == 0)
                 return null;
             else
             { 
-                int index = RandomNumberGenerator.Next(0, availableLocations.Count);
-                return availableLocations[index];
+                int index = RandomNumberGenerator.Next(0, protentialLocations.Count);
+                return protentialLocations[index];
             }
         }
 

@@ -140,7 +140,17 @@
                             if (room.Type == RoomType.Entrance)
                                 ConsoleHelper.Write(room.Display());
                             else
-                                ConsoleHelper.Write("[ ]", ConsoleColor.Gray);
+                            {
+                                if (room.IsDestoryed())
+                                {
+                                    ConsoleHelper.Write("[#]", ConsoleColor.Red);
+                                }
+                                else
+                                {
+                                    ConsoleHelper.Write("[ ]", ConsoleColor.Gray);
+                                }
+                            }
+                                
                         }
                         else
                         {

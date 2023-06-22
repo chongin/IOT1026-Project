@@ -10,7 +10,7 @@
             RoomFactory.Instance.Register(RoomType.Room, () => new Room());
         }
 
-        private Monster? _monster;
+        public Monster? _monster; //TODO just for debug, remember to change to private
 
         public RoomState State { get; private set; } = RoomState.Normaled;
         public string _destoryReason = "";
@@ -76,7 +76,7 @@
         public virtual DisplayDetails Display()
         {
             if (_monster != null)
-                return _monster.Display();
+                return _monster.Display(IsDestoryed());
             else
             {
                 if (State != RoomState.Normaled)
@@ -98,7 +98,35 @@
 
         public bool CanOccupyByMonistor()
         {
-            return !IsActive && _monster == null;
+            return _monster == null;
+        }
+
+        public bool CanBeDestoryed()
+        {
+            if (State == RoomState.Destoryed) //cannot be destoryed 2 times
+            {
+                return false;
+            }
+            else
+            {
+                if (Type == RoomType.Room)
+                {
+                    return true;
+                }
+                else if (Type == RoomType.Wall)
+                {
+                    return false;
+                }
+                else
+                {//other feature rooms
+                    return !IsActive;
+                }
+            }
+        }
+
+        public bool IsDestoryed()
+        {
+            return State == RoomState.Destoryed;
         }
     }
 }

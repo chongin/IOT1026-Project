@@ -30,6 +30,6 @@
         /// Displays the current state of the monster.
         /// </summary>
         /// <returns>Returns a DisplayDetails object containing the monster's display information.</returns>
-        public abstract DisplayDetails Display();
+        public abstract DisplayDetails Display(bool isOccupyInADestoryedRoom = false);
     }
 }

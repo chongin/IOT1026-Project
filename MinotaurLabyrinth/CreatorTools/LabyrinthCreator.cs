@@ -113,7 +113,7 @@
             Location fireDragonLocation = ProceduralGenerator.GetRandomLocation();
             Room dragonRoom = map.GetRoomAtLocation(fireDragonLocation);
             FireDragon dragon = new FireDragon(fireDragonLocation);
-            room.AddMonster(dragon);
+            dragonRoom.AddMonster(dragon);
             map.AddDestoryables(dragon);
         }
     }

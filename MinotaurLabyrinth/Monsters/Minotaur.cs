@@ -85,9 +85,12 @@
         /// Displays the current state of the minotaur.
         /// </summary>
         /// <returns>Returns a DisplayDetails object containing the minotaur's display information.</returns>
-        public override DisplayDetails Display()
+        public override DisplayDetails Display(bool isOccupyInADestoryedRoom = false)
         {
-            return new DisplayDetails("[M]", ConsoleColor.Red);
+            if (isOccupyInADestoryedRoom)
+                return new DisplayDetails("<M>", ConsoleColor.Red);
+            else
+                return new DisplayDetails("[M]", ConsoleColor.Red);
         }
     }
 }
