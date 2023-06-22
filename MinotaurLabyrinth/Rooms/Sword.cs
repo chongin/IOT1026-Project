@@ -7,6 +7,11 @@
             RoomFactory.Instance.Register(RoomType.Sword, () => new Sword());
         }
         public override RoomType Type { get; } = RoomType.Sword;
+
+        //need to set default state is active.
+        public override bool IsActive { get; protected set; } = true;
+
+        //update the display, when it is not active, then show the base class display method
         public override DisplayDetails Display()
         {
             return new DisplayDetails($"[{Type.ToString()[0]}]", ConsoleColor.Yellow);

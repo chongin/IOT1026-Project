@@ -95,5 +95,10 @@
             State = RoomState.Destoryed;
             _destoryReason = reason;
         }
+
+        public bool CanOccupyByMonistor()
+        {
+            return !IsActive && _monster == null;
+        }
     }
 }

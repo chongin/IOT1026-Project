@@ -6,9 +6,11 @@ namespace MinotaurLabyrinth
         private int _fireableDistance = 4; //because 4 is the smallest size of this labyrinth game.
         private Location _location;
         int _fireCount = 0;
-        public FireDragon(Location location)
+        private ConsoleColor _displayColor;
+        public FireDragon(Location location, ConsoleColor color = ConsoleColor.Blue)
         {
             _location = location;
+            _displayColor = color;
         }
 
         /// <summary>
@@ -29,29 +31,30 @@ namespace MinotaurLabyrinth
                 hero.Kill("Burn to died");
             }
 
-            Location? availableLocation = GetLocationOfNotDestroyed(map);
-            if (availableLocation == null)
+            Location? protentialLocation =  GetProtentialLocationForMonster(map);
+            if (protentialLocation == null)
             {
-                ConsoleHelper.WriteLine("I smell you will be a delicous sausage, I will burn you.", ConsoleColor.Red);
+                ConsoleHelper.WriteLine("I smell you will be a delicous sausage, I will burn you.", _displayColor);
             }
             else
             {
                 currentRoom.RemoveMonster();
-                var availableRoom = map.GetRoomAtLocation(availableLocation);
-                availableRoom.AddMonster(this);
-                _location = availableLocation;
+                var protentialRoom = map.GetRoomAtLocation(protentialLocation);
+                protentialRoom.AddMonster(this);
+                _location = protentialLocation;
 
-                availableLocation = GetLocationOfNotDestroyed(map);
-                if (availableRoom == null)
+                var protentialChildLocation =  GetProtentialLocationForMonster(map);
+                if (protentialChildLocation == null)
                 {
                     Console.WriteLine("There is no available location to put one more dragon.");
                 }
                 else
                 {
-                    FireDragon newDragon = new FireDragon(availableLocation);
-                    availableRoom.AddMonster(newDragon);
+                    FireDragon newDragon = new FireDragon(protentialChildLocation, ConsoleColor.Green);
+                    var protentialChildRoom = map.GetRoomAtLocation(protentialChildLocation);
+                    protentialChildRoom.AddMonster(newDragon);
                     map.AddDestoryables(newDragon);
-                    ConsoleHelper.WriteLine("I call another dragon to kill you, you will die soon,", ConsoleColor.Red);
+                    ConsoleHelper.WriteLine("I call another dragon to kill you, you will die soon,", _displayColor);
                 }
             }
         }
@@ -118,7 +121,7 @@ namespace MinotaurLabyrinth
         {
             if (heroDistance == 1)
             {
-                ConsoleHelper.WriteLine("You hear growling and stomping. The minotaur is nearby!", ConsoleColor.Blue);
+                ConsoleHelper.WriteLine("You hear growling and stomping. The minotaur is nearby!", _displayColor);
                 return true;
             }
             return false;
@@ -130,20 +133,21 @@ namespace MinotaurLabyrinth
         /// <returns>Returns a DisplayDetails object containing the minotaur's display information.</returns>
         public override DisplayDetails Display()
         {
-            return new DisplayDetails("[D]", ConsoleColor.Blue);
+            return new DisplayDetails("[D]", _displayColor);
         }
 
         public List<Location> GetFireableLocations(Hero hero, Map map, int distance)
         {
             List<Location> locations = new List<Location>();
-            int x = hero.Location.Row;
-            int y = hero.Location.Column;
-
             for (int row = 0; row < map.Rows; ++row)
             {
                 for (int col = 0; col < map.Columns; ++col)
                 {
-                    int interval = Math.Abs(row - x) + Math.Abs(col - y);
+                    if (row == hero.Location.Row && col == hero.Location.Column)
+                    {// skip hero current location
+                        continue;
+                    }
+                    int interval = Math.Abs(row - hero.Location.Row) + Math.Abs(col - hero.Location.Column);
                     if (interval < distance)
                     {
                         locations.Add(new Location(row, col));
@@ -153,7 +157,7 @@ namespace MinotaurLabyrinth
             return locations;
         }
 
-        public Location? GetLocationOfNotDestroyed(Map map)
+        public Location?  GetProtentialLocationForMonster(Map map)
         {
             List<Location> availableLocations = new();
             for (int row = 0; row < map.Rows; ++row)
@@ -161,12 +165,12 @@ namespace MinotaurLabyrinth
                 for (int col = 0; col < map.Columns; ++col)
                 {
                     if (row == _location.Row && col == _location.Column)
-                    {// skip the current location
+                    {// skip dragon current location
                         continue;
                     }
                     var location = new Location(row, col);
                     var room = map.GetRoomAtLocation(location);
-                    if (!room.IsActive)
+                    if (room.CanOccupyByMonistor())
                     {
                         availableLocations.Add(location);
                     }
@@ -176,7 +180,7 @@ namespace MinotaurLabyrinth
             if (availableLocations.Count == 0)
                 return null;
             else
-            {
+            { 
                 int index = RandomNumberGenerator.Next(0, availableLocations.Count);
                 return availableLocations[index];
             }
@@ -188,7 +192,7 @@ namespace MinotaurLabyrinth
             List<Room> adjacentRooms = map.GetAdjacentRooms(hero.Location);
             foreach (var room in adjacentRooms)
             {
-                if (room.State != RoomState.Destoryed || room.Type != RoomType.Wall || room.Type != RoomType.Entrance)
+                if (room.State != RoomState.Destoryed && room.Type != RoomType.Wall)
                 {
                     isSurroundFires = false;
                     break;
