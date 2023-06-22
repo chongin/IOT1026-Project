@@ -39,7 +39,17 @@
             };
 
             if (map.IsOnMap(newLocation))
-                hero.Location = newLocation;
+            {
+                Room room = map.GetRoomAtLocation(newLocation);
+                if (room.State == RoomState.Destoryed)
+                {
+                    ConsoleHelper.WriteLine($"This room[{newLocation.Row},{newLocation.Column}] already destoryed, cannot enter into.", ConsoleColor.Red);
+                }
+                else
+                {
+                    hero.Location = newLocation;
+                }
+            }
             else
                 ConsoleHelper.WriteLine("There is a wall there.", ConsoleColor.Red);
         }

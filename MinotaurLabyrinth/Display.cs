@@ -5,11 +5,11 @@
         public static void ScreenUpdate(Hero hero, Map map)
         {
             ConsoleHelper.WriteLine("--------------------------------------------------------------------------------", ConsoleColor.Gray);
-            ConsoleHelper.WriteLine("Map", ConsoleColor.White);
+            ConsoleHelper.WriteLine("Map", ConsoleColor.Black);
             DisplayMap(hero, map);
             Console.WriteLine();
-            ConsoleHelper.WriteLine("Commands:", ConsoleColor.White);
-            ConsoleHelper.Write($"{hero.CommandList}", ConsoleColor.White);
+            ConsoleHelper.WriteLine("Commands:", ConsoleColor.Black);
+            ConsoleHelper.Write($"{hero.CommandList}", ConsoleColor.Black);
             Console.WriteLine();
             DisplayStatus(hero, map);
             ConsoleHelper.WriteLine("--------------------------------------------------------------------------------", ConsoleColor.Gray);
