@@ -11,7 +11,7 @@ namespace MinotaurLabyrinth
         private Location _location;
         int _fireCount = 0;
         private ConsoleColor _displayColor;
-        public FireDragon(Location location, ConsoleColor color = ConsoleColor.Blue)
+        public FireDragon(Location location, ConsoleColor color = ConsoleColor.Cyan)
         {
             _location = location;
             _displayColor = color;
@@ -64,7 +64,7 @@ namespace MinotaurLabyrinth
         {
             if (heroDistance == 1)
             {
-                ConsoleHelper.WriteLine("You hear a sound of glass breaking. The smasher is nearby!", _displayColor);
+                ConsoleHelper.WriteLine("You seem to hear the roar of the dragon!", _displayColor);
                 return true;
             }
             return false;
@@ -180,7 +180,7 @@ namespace MinotaurLabyrinth
 
         protected virtual void HandleNoProtentialRoomCanBeDestoryed()
         {
-            ConsoleHelper.WriteLine("No rooms can be destoryed, you're waitting to burn.", ConsoleColor.DarkGreen);
+            ConsoleHelper.WriteLine("No rooms can be destoryed, you're waitting to burn.", _displayColor);
         }
 
         protected virtual void HandleProtentialRoomsCanBeDestoryed(Hero hero, Map map, List<Room> protentialToBeDestoryedRooms)
@@ -212,7 +212,7 @@ namespace MinotaurLabyrinth
 
         protected virtual void HandleHeroWasSurroundByFire(Hero hero, Map map)
         {
-            ConsoleHelper.WriteLine("You're surrounded by flames and there's no escape", ConsoleColor.DarkGreen);
+            ConsoleHelper.WriteLine("You're surrounded by flames and there's no escape", _displayColor);
             hero.Kill("You're burn by flames");
         }
 
@@ -230,7 +230,7 @@ namespace MinotaurLabyrinth
                 var protentialChildLocation = GetProtentialLocationForMonster(map);
                 if (protentialChildLocation == null)
                 {
-                    Console.WriteLine("There is no available location to put one more dragon.");
+                    ConsoleHelper.WriteLine("I don't need to summon another dragon, you will be burnt soon.", _displayColor);
                 }
                 else
                 {
@@ -250,11 +250,11 @@ namespace MinotaurLabyrinth
 
         protected virtual void SummonOneMonsterAtLocataion(Map map, Location locaton)
         {
-            FireDragon newDragon = new FireDragon(locaton, ConsoleColor.Red);
+            FireDragon newDragon = new FireDragon(locaton, ConsoleColor.DarkBlue);
             var room = map.GetRoomAtLocation(locaton);
             room.AddMonster(newDragon);
             map.AddSmashers(newDragon);
-            ConsoleHelper.WriteLine("I call another dragon to kill you, you will die soon,", _displayColor);
+            ConsoleHelper.WriteLine("I summon another dragon to kill you, you will die soon,", _displayColor);
         }
     }
 }
