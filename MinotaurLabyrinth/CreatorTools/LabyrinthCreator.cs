@@ -114,7 +114,7 @@
             Room dragonRoom = map.GetRoomAtLocation(fireDragonLocation);
             FireDragon dragon = new FireDragon(fireDragonLocation);
             dragonRoom.AddMonster(dragon);
-            map.AddDestoryables(dragon);
+            map.AddSmashers(dragon);
         }
     }
 }

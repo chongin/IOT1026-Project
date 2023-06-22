@@ -41,7 +41,7 @@
             if (map.IsOnMap(newLocation))
             {
                 Room room = map.GetRoomAtLocation(newLocation);
-                if (room.State == RoomState.Destoryed)
+                if (room.IsDestoryed())
                 {
                     ConsoleHelper.WriteLine($"This room[{newLocation.Row},{newLocation.Column}] already destoryed, cannot enter into.", ConsoleColor.Red);
                 }

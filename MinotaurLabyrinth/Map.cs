@@ -6,7 +6,7 @@
         // The rooms are stored in a 2D array. A 3D array would allow for multiple levels in the dungeon. 
         private readonly Room[,] _rooms;
 
-        private readonly List<IDestoryable> _destoryables = new List<IDestoryable>();
+        private readonly List<ISmasher> _smashers = new List<ISmasher>();
 
         // The total number of rows in this specific game world.
         public int Rows { get; }
@@ -33,16 +33,16 @@
             }
         }
 
-        public void AddDestoryables(IDestoryable destoryable)
+        public void AddSmashers(ISmasher smasher)
         {
-            _destoryables.Add(destoryable);
+            _smashers.Add(smasher);
         }
 
         public void ExcuteDestoryRooms(Hero hero)
         {
-            foreach (var destroyable in _destoryables)
+            foreach (var smasher in _smashers)
             {
-                destroyable.DestoryRoom(hero, this);
+                smasher.DestoryRoom(hero, this);
             }
         }
 

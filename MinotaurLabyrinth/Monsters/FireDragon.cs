@@ -1,7 +1,7 @@
 ﻿using System;
 namespace MinotaurLabyrinth
 {
-    public class FireDragon : Monster, IDestoryable
+    public class FireDragon : Monster, ISmasher
     {
         private int _fireableDistance = 4; //because 4 is the smallest size of this labyrinth game.
         private Location _location;
@@ -53,7 +53,7 @@ namespace MinotaurLabyrinth
                     FireDragon newDragon = new FireDragon(protentialChildLocation, ConsoleColor.Green);
                     var protentialChildRoom = map.GetRoomAtLocation(protentialChildLocation);
                     protentialChildRoom.AddMonster(newDragon);
-                    map.AddDestoryables(newDragon);
+                    map.AddSmashers(newDragon);
                     ConsoleHelper.WriteLine("I call another dragon to kill you, you will die soon,", _displayColor);
                 }
             }
@@ -199,7 +199,7 @@ namespace MinotaurLabyrinth
             List<Room> adjacentRooms = map.GetAdjacentRooms(hero.Location);
             foreach (var room in adjacentRooms)
             {
-                if (room.State != RoomState.Destoryed && room.Type != RoomType.Wall)
+                if (!room.IsDestoryed() && room.Type != RoomType.Wall)
                 {
                     isSurroundFires = false;
                     break;
