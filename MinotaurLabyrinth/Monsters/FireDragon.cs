@@ -228,20 +228,22 @@ namespace MinotaurLabyrinth
             else
             {
                 SwapToNewLocation(map, currentRoom, protentialLocation);
-                
-                var protentialChildLocation = GetProtentialLocationForMonster(map);
-                if (protentialChildLocation == null)
-                {
-                    ConsoleHelper.WriteLine("I don't need to summon another dragon, you will be burnt soon.", _displayColor);
-                }
-                else
-                {
-                    SummonOneMonsterAtLocataion(map, protentialChildLocation);
-                }
+                SummonChildMonster(map);
             }
         }
 
-
+        protected virtual void SummonChildMonster(Map map)
+        {
+            var protentialChildLocation = GetProtentialLocationForMonster(map);
+            if (protentialChildLocation == null)
+            {
+                ConsoleHelper.WriteLine("I don't need to summon another dragon, you will be burnt soon.", _displayColor);
+            }
+            else
+            {
+                SummonOneMonsterAtLocataion(map, protentialChildLocation);
+            }
+        }
         protected virtual void SwapToNewLocation(Map map, Room currentRoom, Location newLocation)
         {
             currentRoom.RemoveMonster();

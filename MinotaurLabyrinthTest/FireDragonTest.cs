@@ -323,5 +323,75 @@ namespace MinotaurLabyrinthTest
             method.Invoke(dragonMock.Object, new Object[] { hero, map, protentialToBeDestoryedRooms });
             dragonMock.Protected().Verify("LevelUp", Times.Once(), new object[] { });
         }
+
+        [TestMethod]
+        public void Test_InteractWithHeroInRoom_No_Protential_Location_For_Monster()
+        {
+            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(1, 2), ConsoleColor.Cyan }) { CallBase = true };
+            Hero hero = new Hero(new Location(1, 0));
+            Map map = new Map(4, 4);
+            Room room = new();
+
+            //MyExperience: When to mock a function to return nullable object, for example: Location?, you should define it first like below, cannot .Returns(null)
+            Location nullLocation = null;
+            dragonMock.Protected().Setup<Location>("GetProtentialLocationForMonster", new Object[] { map }).Returns(nullLocation);
+            MethodInfo method = typeof(FireDragon).GetMethod("InteractWithHeroInRoom", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            method.Invoke(dragonMock.Object, new Object[] { room, hero, map });
+            dragonMock.Protected().Verify("SwapToNewLocation", Times.Never(), new Object[] { map, room, new Location(3,3) });
+        }
+
+        [TestMethod]
+        public void Test_InteractWithHeroInRoom_Has_Protential_Location()
+        {
+            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(1, 2), ConsoleColor.Cyan }) { CallBase = true };
+            Hero hero = new Hero(new Location(1, 0));
+            Map map = new Map(4, 4);
+            Room room = new();
+
+            //MyExperience: When to mock a function to return nullable object, for example: Location?, you should define it first like below, cannot .Returns(null)
+            Location location = new(1, 1);
+            dragonMock.Protected().Setup<Location>("GetProtentialLocationForMonster", new Object[] { map }).Returns(location);
+
+            MethodInfo method = typeof(FireDragon).GetMethod("InteractWithHeroInRoom", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            method.Invoke(dragonMock.Object, new Object[] { room, hero, map });
+            dragonMock.Protected().Verify("SwapToNewLocation", Times.Once(), new Object[] { map, room, location });
+            dragonMock.Protected().Verify("SummonChildMonster", Times.Once(), new Object[] { map});
+        }
+
+        [TestMethod]
+        public void Test_SummonChildMonster_No_Protential_Location_For_Monster()
+        {
+            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(1, 2), ConsoleColor.Cyan }) { CallBase = true };
+            Hero hero = new Hero(new Location(1, 0));
+            Map map = new Map(4, 4);
+            Room room = new();
+
+            //MyExperience: When to mock a function to return nullable object, for example: Location?, you should define it first like below, cannot .Returns(null)
+            Location nullLocation = null;
+            dragonMock.Protected().Setup<Location>("GetProtentialLocationForMonster", new Object[] { map }).Returns(nullLocation);
+            MethodInfo method = typeof(FireDragon).GetMethod("SummonChildMonster", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            method.Invoke(dragonMock.Object, new Object[] { map });
+            dragonMock.Protected().Verify("SummonOneMonsterAtLocataion", Times.Never(), new Object[] { map, new Location(3, 3) });
+        }
+
+        [TestMethod]
+        public void Test_SummonChildMonster_Has_Protential_Location_For_Monster()
+        {
+            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(1, 2), ConsoleColor.Cyan }) { CallBase = true };
+            Hero hero = new Hero(new Location(1, 0));
+            Map map = new Map(4, 4);
+            Room room = new();
+
+            //MyExperience: When to mock a function to return nullable object, for example: Location?, you should define it first like below, cannot .Returns(null)
+            Location location = new Location(1, 1);
+            dragonMock.Protected().Setup<Location>("GetProtentialLocationForMonster", new Object[] { map }).Returns(location);
+            MethodInfo method = typeof(FireDragon).GetMethod("SummonChildMonster", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            method.Invoke(dragonMock.Object, new Object[] { map });
+            dragonMock.Protected().Verify("SummonOneMonsterAtLocataion", Times.Once(), new Object[] { map, location });
+        }
     }
 }
