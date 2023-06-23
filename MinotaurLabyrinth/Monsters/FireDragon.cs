@@ -10,7 +10,7 @@ namespace MinotaurLabyrinth
 
         private int _fireableDistance { get; set; }
         private Location _location;
-        int _fireCount = 0;
+        private int _fireCount = 0;
         private ConsoleColor _displayColor;
         public FireDragon(Location location, ConsoleColor color = ConsoleColor.Cyan)
         {
@@ -44,8 +44,7 @@ namespace MinotaurLabyrinth
         //so that the hereo cannot enter into these rooms
         public void DestoryRoom(Hero hero, Map map)
         {
-            List<Location> fireableLocations = GetFireableLocations(hero, map, _fireableDistance);
-            var protentialCanBeDestoryedRooms = GetProtentialCanBeDestoryedRooms(hero, map, fireableLocations);
+            var protentialCanBeDestoryedRooms = GetProtentialCanBeDestoryedRooms(hero, map);
 
             if (protentialCanBeDestoryedRooms.Count == 0)
             {
@@ -161,8 +160,9 @@ namespace MinotaurLabyrinth
             //_fireableDistance = Math.Clamp(_fireableDistance - 1, 1, _fireableDistance - 1);
         }
 
-        protected virtual List<Room> GetProtentialCanBeDestoryedRooms(Hero hero, Map map, List<Location> fireableLocations)
+        protected virtual List<Room> GetProtentialCanBeDestoryedRooms(Hero hero, Map map)
         {
+            List<Location> fireableLocations = GetFireableLocations(hero, map, _fireableDistance);
             List<Room> protentialToBeDestoryedRooms = new List<Room>();
             foreach (var location in fireableLocations)
             {

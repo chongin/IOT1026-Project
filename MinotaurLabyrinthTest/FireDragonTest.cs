@@ -43,7 +43,7 @@ namespace MinotaurLabyrinthTest
                 mockAdjacentRooms.Add(room);
             }
 
-            var mapMock = new Mock<Map>(4, 4);    
+            var mapMock = new Mock<Map>(new Object[] { 4, 4 });
             mapMock.Setup<List<Room>>(ins => ins.GetAdjacentRooms(hero.Location)).Returns(mockAdjacentRooms);
             MethodInfo method = typeof(FireDragon).GetMethod("IsSurroundByFire", BindingFlags.NonPublic | BindingFlags.Instance);
             bool result = (bool)method.Invoke(dragon, new object[] { hero, mapMock.Object });
@@ -65,7 +65,7 @@ namespace MinotaurLabyrinthTest
 
             mockAdjacentRooms.Add(new Wall());
 
-            var mapMock = new Mock<Map>(4, 4);
+            var mapMock = new Mock<Map>(new Object[] { 4, 4 });
             mapMock.Setup<List<Room>>(ins => ins.GetAdjacentRooms(hero.Location)).Returns(mockAdjacentRooms);
             MethodInfo method = typeof(FireDragon).GetMethod("IsSurroundByFire", BindingFlags.NonPublic | BindingFlags.Instance);
             bool result = (bool)method.Invoke(dragon, new object[] { hero, mapMock.Object });
@@ -87,7 +87,7 @@ namespace MinotaurLabyrinthTest
             mockAdjacentRooms.Add(new Entrance());
             mockAdjacentRooms.Add(new Pit());
 
-            var mapMock = new Mock<Map>(4, 4);
+            var mapMock = new Mock<Map>(new Object[] { 4, 4 });
             mapMock.Setup<List<Room>>(ins => ins.GetAdjacentRooms(hero.Location)).Returns(mockAdjacentRooms);
             MethodInfo method = typeof(FireDragon).GetMethod("IsSurroundByFire", BindingFlags.NonPublic | BindingFlags.Instance);
             bool result = (bool)method.Invoke(dragon, new object[] { hero, mapMock.Object });
@@ -97,30 +97,40 @@ namespace MinotaurLabyrinthTest
         [TestMethod]
         public void Test_GetProtentialCanBeDestoryedRooms()
         {
-            var dragon = new FireDragon(new Location(3, 3));
-            var hero = new Hero(new Location(2, 2));
-            var mapMock = new Mock<Map>(4, 4);
+            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(3, 3), ConsoleColor.Cyan });
+            dragonMock.CallBase = true; //very important, then it can call the virtual method(exclude the methods that Setup)
 
+            var hero = new Hero(new Location(2, 2));
+            var mapMock = new Mock<Map>(new Object[] { 4, 4 });
             List<Location> mockLocations = new();
             for (int i = 0; i < 1; ++i)
             {
                 mockLocations.Add(new Location(i, 0));
             }
 
-            //Test can be Destoryed
+            ////Test can be Destoryed
             var room = new Room(); //room default can be destoryed
             mapMock.Setup<Room>(ins => ins.GetRoomAtLocation(mockLocations[0])).Returns(room);
-            MethodInfo method = typeof(FireDragon).GetMethod("GetProtentialCanBeDestoryedRooms", BindingFlags.NonPublic | BindingFlags.Instance);
-            var rooms = (List<Room>)method.Invoke(dragon, new object[] { hero, mapMock.Object, mockLocations });
+
+            //?? When I want to mock GetFireableLocations, it depends on its parameter value to find the collect method. I didn't understand how it works now, need to reasearch
+            //for example if change the parameter 4 to 3, then the Setup method will be failed, it throws: System.Reflection.TargetInvocationException
+            dragonMock.Protected().Setup<List<Location>>("GetFireableLocations", new Object[] { hero, mapMock.Object, 4 }).Returns(mockLocations);
+
+          
+
+            var method = typeof(FireDragon).GetMethod("GetProtentialCanBeDestoryedRooms", BindingFlags.NonPublic | BindingFlags.Instance);
+            var rooms = (List<Room>)method.Invoke(dragonMock.Object, new Object[] { hero, mapMock.Object });
             Assert.AreEqual(1, rooms.Count);
 
             //Test cannot be Destroyed
             var cannotBeDestoryedRoom = new Room();
             cannotBeDestoryedRoom.DestoryBy("mock");
             mapMock.Setup<Room>(ins => ins.GetRoomAtLocation(mockLocations[0])).Returns(cannotBeDestoryedRoom);
-            var noRooms = (List<Room>)method.Invoke(dragon, new object[] { hero, mapMock.Object, mockLocations });
+            var noRooms = (List<Room>)method.Invoke(dragonMock.Object, new object[] { hero, mapMock.Object });
             Assert.AreEqual(0, noRooms.Count);
         }
+
+       
     }
 }
 
