@@ -283,5 +283,45 @@ namespace MinotaurLabyrinthTest
 
             Assert.AreEqual(false, exceedDistance);
         }
+
+        [TestMethod]
+        public void Test_HandleProtentialRoomsCanBeDestoryed_SurroundByFire()
+        {
+            //MyExperience: even the class contruction function has the default parameter, also need to pass into the Object[], otherwise, cannot create a object.
+            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(1, 2), ConsoleColor.Cyan }) { CallBase = true};
+            Hero hero = new Hero(new Location(0, 1));
+            Map map = new Map(4, 4);
+
+            List<Room> protentialToBeDestoryedRooms = new List<Room>() { new Room() };
+            dragonMock.Protected().Setup<bool>("IsSurroundByFire", new Object[] { hero, map }).Returns(true);
+            MethodInfo method = typeof(FireDragon).GetMethod("HandleProtentialRoomsCanBeDestoryed", BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(dragonMock.Object, new Object[] { hero, map, protentialToBeDestoryedRooms });
+            dragonMock.Protected().Verify("HandleHeroWasSurroundByFire", Times.Once(), new object[] { hero, map });
+        }
+
+        [TestMethod]
+        public void Test_HandleProtentialRoomsCanBeDestoryed_Not_SurroundByFile()
+        {
+            //MyExperience: even the class contruction function has the default parameter, also need to pass into the Object[], otherwise, cannot create a object.
+            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(1, 2), ConsoleColor.Cyan }) { CallBase = true };
+            Hero hero = new Hero(new Location(0, 1));
+            Map map = new Map(4, 4);
+
+            List<Room> protentialToBeDestoryedRooms = new List<Room>() { new Room() };
+            dragonMock.Protected().Setup<bool>("IsSurroundByFire", new Object[] { hero, map }).Returns(false);
+            MethodInfo method = typeof(FireDragon).GetMethod("HandleProtentialRoomsCanBeDestoryed", BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(dragonMock.Object, new Object[] { hero, map, protentialToBeDestoryedRooms });
+            dragonMock.Protected().Verify("HandleHeroWasSurroundByFire", Times.Never(), new object[] { hero, map });
+
+            FieldInfo fieldInfo = typeof(FireDragon).GetField("_fireCount", BindingFlags.NonPublic | BindingFlags.Instance);
+            int fireCount = (int)fieldInfo.GetValue(dragonMock.Object);
+
+            Assert.AreEqual(1, fireCount);
+
+            //call more 2 times, then test call level up
+            method.Invoke(dragonMock.Object, new Object[] { hero, map, protentialToBeDestoryedRooms });
+            method.Invoke(dragonMock.Object, new Object[] { hero, map, protentialToBeDestoryedRooms });
+            dragonMock.Protected().Verify("LevelUp", Times.Once(), new object[] { });
+        }
     }
 }
