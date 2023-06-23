@@ -423,6 +423,72 @@ namespace MinotaurLabyrinthTest
             dragonMock.Protected().Verify("HandleProtentialRoomsCanBeDestoryed", Times.Once(), new Object[] { hero,map,protentialRooms });
         }
 
+        [TestMethod]
+        public void Test_HandleHeroWasSurroundByFire()
+        {
+            var dragon = new FireDragon(new Location(1, 1));
+            var hero = new Hero(new Location(2, 2));
+            var map = new Map(4, 4);
 
+            MethodInfo method = typeof(FireDragon).GetMethod("HandleHeroWasSurroundByFire", BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(dragon, new Object[] { hero, map });
+
+            Assert.AreEqual(false, hero.IsAlive);
+        }
+
+        [TestMethod]
+        public void Test_DestoryDragonItSelfRoom()
+        {
+            var dragon = new FireDragon(new Location(1, 1));
+            var map = new Map(4, 4);
+            var method = typeof(FireDragon).GetMethod("DestoryDragonItSelfRoom", BindingFlags.NonPublic | BindingFlags.Instance);
+            var room = (Room)method.Invoke(dragon, new Object[] { map });
+            Assert.AreEqual(RoomState.Destoryed, room.State);
+        }
+
+        [TestMethod]
+        public void Test_Activate_HandleHeroWasSurroundByFire()
+        {
+            var dragonMock = new Mock<FireDragon>(new Location(1, 1), ConsoleColor.Cyan);
+            dragonMock.CallBase = true;
+            Hero hero = new(new Location(1, 1));
+            Map map = new(4, 4);
+
+            var room = new Room();
+            dragonMock.Protected().Setup<bool>("IsSurroundByFire", new Object[] { hero, map }).Returns(true);
+            dragonMock.Protected().Setup<Room>("DestoryDragonItSelfRoom", new Object[] { map }).Returns(room);
+
+            dragonMock.Object.Activate(hero, map);
+            dragonMock.Protected().Verify("HandleHeroWasSurroundByFire", Times.Once(), new Object[]{ hero, map });
+            dragonMock.Protected().Verify("InteractWithHeroInRoom", Times.Never(), new Object[] { room, hero, map });
+        }
+
+        [TestMethod]
+        public void Test_Activate_InteractWithHeroInRoom()
+        {
+            var dragonMock = new Mock<FireDragon>(new Location(1, 1), ConsoleColor.Cyan);
+            dragonMock.CallBase = true;
+            Hero hero = new(new Location(1, 1));
+            Map map = new(4, 4);
+
+            var room = new Room();
+            dragonMock.Protected().Setup<bool>("IsSurroundByFire", new Object[] { hero, map }).Returns(false);
+            dragonMock.Protected().Setup<Room>("DestoryDragonItSelfRoom", new Object[] { map }).Returns(room);
+
+            dragonMock.Object.Activate(hero, map);
+            dragonMock.Protected().Verify("HandleHeroWasSurroundByFire", Times.Never(), new Object[] { hero, map });
+            dragonMock.Protected().Verify("InteractWithHeroInRoom", Times.Once(), new Object[] { room, hero, map });
+        }
+
+        [TestMethod]
+        public void Test_Display()
+        {
+            var dragon = new FireDragon(new Location(1, 1));
+            DisplayDetails detail = dragon.Display(false);
+            Assert.AreEqual(detail.Text, "[D]");
+
+            DisplayDetails detail_1 = dragon.Display(true);
+            Assert.AreEqual(detail_1.Text, "<D>");
+        }
     }
 }

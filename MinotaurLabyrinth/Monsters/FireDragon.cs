@@ -27,8 +27,7 @@ namespace MinotaurLabyrinth
         /// <param name="map">The current game map.</param>
         public override void Activate(Hero hero, Map map)
         {
-            var currentRoom = map.GetRoomAtLocation(_location);
-            currentRoom.DestoryBy("Fire");
+            Room currentRoom = DestoryDragonItSelfRoom(map);
 
             //Check the hero already surround by fire.
             if (IsSurroundByFire(hero, map))
@@ -259,6 +258,13 @@ namespace MinotaurLabyrinth
             room.AddMonster(newDragon);
             map.AddSmashers(newDragon);
             ConsoleHelper.WriteLine("I summon another dragon to kill you, you will die soon,", _displayColor);
+        }
+
+        protected virtual Room DestoryDragonItSelfRoom(Map map)
+        {
+            var currentRoom = map.GetRoomAtLocation(_location);
+            currentRoom.DestoryBy("Fire");
+            return currentRoom;
         }
     }
 }
