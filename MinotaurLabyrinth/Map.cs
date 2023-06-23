@@ -141,16 +141,18 @@
                                 ConsoleHelper.Write(room.Display());
                             else
                             {
-                                if (room.IsDestoryed())
-                                {
-                                    ConsoleHelper.Write("[#]", ConsoleColor.Red);
-                                }
-                                else
-                                {
-                                    ConsoleHelper.Write("[ ]", ConsoleColor.Gray);
-                                }
+                                // remove this logic, make the game more mysterious.
+                                //if (room.IsDestoryed())
+                                //{
+                                //    ConsoleHelper.Write("[#]", ConsoleColor.Red);
+                                //}
+                                //else
+                                //{
+                                //    ConsoleHelper.Write("[ ]", ConsoleColor.Gray);
+                                //}
+                                ConsoleHelper.Write("[ ]", ConsoleColor.Gray);
                             }
-                                
+
                         }
                         else
                         {

@@ -181,13 +181,14 @@ namespace MinotaurLabyrinth
 
         protected virtual void HandleNoProtentialRoomCanBeDestoryed()
         {
-            ConsoleHelper.WriteLine("No rooms can be destoryed, you're waitting to burn.", _displayColor);
+            ConsoleHelper.WriteLine("A dragon just waits quietly for you to be burnt.", _displayColor);
         }
 
         protected virtual void HandleProtentialRoomsCanBeDestoryed(Hero hero, Map map, List<Room> protentialToBeDestoryedRooms)
         {
             Room room = GetOneProtentialRoomCanBeDestoryed(protentialToBeDestoryedRooms);
             room.DestoryBy("Fire");
+            ConsoleHelper.WriteLine("The labyrinth shook a little bit, as if something had collapsed", _displayColor);
 
             if (IsSurroundByFire(hero, map))
             {
@@ -213,8 +214,8 @@ namespace MinotaurLabyrinth
 
         protected virtual void HandleHeroWasSurroundByFire(Hero hero, Map map)
         {
-            ConsoleHelper.WriteLine("You're surrounded by flames and there's no escape", _displayColor);
-            hero.Kill("You're burn by flames");
+            ConsoleHelper.WriteLine("There is a voice says you're surrounded by flames and there's no escape.", _displayColor);
+            hero.Kill("You're burnt by flames");
         }
 
         protected virtual void InteractWithHeroInRoom(Room currentRoom, Hero hero, Map map)
@@ -222,7 +223,7 @@ namespace MinotaurLabyrinth
             Location? protentialLocation = GetProtentialLocationForMonster(map);
             if (protentialLocation == null)
             {
-                ConsoleHelper.WriteLine("I smell you will be a delicous sausage, I will burn you.", _displayColor);
+                ConsoleHelper.WriteLine("There is a voice says I smell you would be a delicious sausage, I'd burn you.", _displayColor);
             }
             else
             {
@@ -236,7 +237,7 @@ namespace MinotaurLabyrinth
             var protentialChildLocation = GetProtentialLocationForMonster(map);
             if (protentialChildLocation == null)
             {
-                ConsoleHelper.WriteLine("I don't need to summon another dragon, you will be burnt soon.", _displayColor);
+                ConsoleHelper.WriteLine("Even if I don't need to summon another dragon, you'll be burned to death in no time.", _displayColor);
             }
             else
             {
@@ -257,7 +258,7 @@ namespace MinotaurLabyrinth
             var room = map.GetRoomAtLocation(locaton);
             room.AddMonster(newDragon);
             map.AddSmashers(newDragon);
-            ConsoleHelper.WriteLine("I summon another dragon to kill you, you will die soon,", _displayColor);
+            ConsoleHelper.WriteLine("The map shook violently, as if another monster had appeared.", _displayColor);
         }
 
         protected virtual Room DestoryDragonItSelfRoom(Map map)
