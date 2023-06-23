@@ -174,6 +174,7 @@ namespace MinotaurLabyrinthTest
             List<ISmasher> smashers = (List<ISmasher>)smashersProperty.GetValue(mapMock.Object);
             Assert.AreEqual(1, smashers.Count);
 
+            //MyExperience: Can set CallbBase later, so I control when will the object mock method or call the real method, but remember the method should be virtual
             mapMock.CallBase = true; //here I need to call the real method to get the room, and check the room really add a new monster
             method = typeof(Map).GetMethod("GetRoomAtLocation");
             Room realRoom = (Room)method.Invoke(mapMock.Object, new Object[] { location });
@@ -183,5 +184,104 @@ namespace MinotaurLabyrinthTest
             Assert.AreNotEqual(null, monsterAdded);
         }
 
+        [TestMethod]
+        public void Test_GetProtentialLocationForMonster_Skip_Dragon_Itself_Location()
+        {
+            FireDragon dragon = new FireDragon(new Location(1, 0));
+            Map map = new Map(2, 2);
+
+            Room[,] mockRooms = new Room[2, 2];
+            mockRooms[0, 0] = new Toxic(); //cannot occupy by monster
+            mockRooms[0, 1] = new Pit();
+            mockRooms[1, 0] = new Room(); //can occupy but he location is the same as dragon itself
+            mockRooms[1, 1] = new Sword();
+
+            //Overwrite the _rooms data in the map instance.
+            FieldInfo roomInfo = typeof(Map).GetField("_rooms", BindingFlags.NonPublic | BindingFlags.Instance);
+            roomInfo.SetValue(map, mockRooms);
+
+            MethodInfo method = typeof(FireDragon).GetMethod("GetProtentialLocationForMonster", BindingFlags.NonPublic | BindingFlags.Instance);
+            Location? location = (Location)method.Invoke(dragon, new Object[] { map });
+            Assert.AreEqual(null, location);
+        }
+
+        [TestMethod]
+        public void Test_GetProtentialLocationForMonster_Return_Specify_Location()
+        {
+            FireDragon dragon = new FireDragon(new Location(1, 0));
+            Map map = new Map(2, 2);
+
+            Room[,] mockRooms = new Room[2, 2];
+            mockRooms[0, 0] = new Toxic(); //cannot occupy by monster
+            mockRooms[0, 1] = new Room(); //can occupy,check with this value
+            mockRooms[1, 0] = new Room(); //can occupy but he location is the same as dragon itself
+            mockRooms[1, 1] = new Sword();
+
+            //MyExperence: Can use SetValue to set the private property value.
+            //Overwrite the _rooms data in the map instance.
+            FieldInfo roomInfo = typeof(Map).GetField("_rooms", BindingFlags.NonPublic | BindingFlags.Instance);
+            roomInfo.SetValue(map, mockRooms);
+
+            MethodInfo method = typeof(FireDragon).GetMethod("GetProtentialLocationForMonster", BindingFlags.NonPublic | BindingFlags.Instance);
+            Location? location = (Location)method.Invoke(dragon, new Object[] { map });
+            Assert.AreEqual(0, location.Row);
+            Assert.AreEqual(1, location.Column);
+        }
+
+        [TestMethod]
+        public void Test_GetFireableLocations_Skip_Hero_location()
+        {
+            FireDragon dragon = new FireDragon(new Location(1, 0));
+            Map map = new Map(4, 4);
+            Location heroLocation = new Location(1, 1);
+            Hero hero = new Hero(heroLocation);
+
+            MethodInfo method = typeof(FireDragon).GetMethod("GetFireableLocations", BindingFlags.NonPublic | BindingFlags.Instance);
+            var locations = (List<Location>)method.Invoke(dragon, new Object[] { hero, map, 4});
+            Assert.AreEqual(15, locations.Count);
+
+            bool existHeroLocation = false;
+            foreach (var location in locations)
+            {
+                if (location.Column == heroLocation.Column && location.Row == heroLocation.Row)
+                {
+                    existHeroLocation = true;
+                    break;
+                }
+            }
+
+            Assert.AreEqual(false, existHeroLocation);
+        }
+
+        [TestMethod]
+        public void Test_GetFireableLocations_Exclude_Exceed_Distance_Locations()
+        {
+            FireDragon dragon = new FireDragon(new Location(1, 0));
+            Map map = new Map(4, 4);
+            Location heroLocation = new Location(1, 1);
+            Hero hero = new Hero(heroLocation);
+
+            MethodInfo method = typeof(FireDragon).GetMethod("GetFireableLocations", BindingFlags.NonPublic | BindingFlags.Instance);
+            int max_distance = 2;
+            var locations = (List<Location>)method.Invoke(dragon, new Object[] { hero, map, max_distance });
+            Assert.AreEqual(10, locations.Count);
+
+            bool exceedDistance = false;
+            foreach (var location in locations)
+            {
+                if (
+                    (location.Column == 3 && location.Row == 2) ||
+                    (location.Column == 3 && location.Row == 3) ||
+                    (location.Column == 2 && location.Row == 3) ||
+                    (location.Column == 0 && location.Row == 3)
+                   )
+                {
+                    exceedDistance = true;
+                    break;
+                }
+            }
+
+            Assert.AreEqual(false, exceedDistance);
+        }
     }
 }

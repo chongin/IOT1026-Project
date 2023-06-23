@@ -105,7 +105,7 @@ namespace MinotaurLabyrinth
             return locations;
         }
 
-        public Location?  GetProtentialLocationForMonster(Map map)
+        protected virtual Location? GetProtentialLocationForMonster(Map map)
         {
             List<Location> protentialLocations = new();
             for (int row = 0; row < map.Rows; ++row)
