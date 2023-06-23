@@ -393,5 +393,36 @@ namespace MinotaurLabyrinthTest
             method.Invoke(dragonMock.Object, new Object[] { map });
             dragonMock.Protected().Verify("SummonOneMonsterAtLocataion", Times.Once(), new Object[] { map, location });
         }
+
+        [TestMethod]
+        public void Test_DestoryRoom_No_Protential_Room_Can_Be_Destroyed()
+        {
+            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(1, 2), ConsoleColor.Cyan }) { CallBase = true };
+            Hero hero = new Hero(new Location(1, 0));
+            Map map = new Map(4, 4);
+
+            List<Room> protentialRooms = new();
+            dragonMock.Protected().Setup<List<Room>>("GetProtentialCanBeDestoryedRooms", new Object[] { hero, map }).Returns(protentialRooms);
+
+            dragonMock.Object.DestoryRoom(hero, map);
+            dragonMock.Protected().Verify("HandleNoProtentialRoomCanBeDestoryed", Times.Once(), new Object[] { });
+        }
+
+        [TestMethod]
+        public void Test_DestoryRoom_To_Handle_Destroyed_Room()
+        {
+            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(1, 2), ConsoleColor.Cyan }) { CallBase = true };
+            Hero hero = new Hero(new Location(1, 0));
+            Map map = new Map(4, 4);
+
+            List<Room> protentialRooms = new() { new Room() };
+            dragonMock.Protected().Setup<List<Room>>("GetProtentialCanBeDestoryedRooms", new Object[] { hero, map }).Returns(protentialRooms);
+
+            dragonMock.Object.DestoryRoom(hero, map);
+            dragonMock.Protected().Verify("HandleNoProtentialRoomCanBeDestoryed", Times.Never(), new Object[] { });
+            dragonMock.Protected().Verify("HandleProtentialRoomsCanBeDestoryed", Times.Once(), new Object[] { hero,map,protentialRooms });
+        }
+
+
     }
 }
