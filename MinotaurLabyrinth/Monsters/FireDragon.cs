@@ -44,15 +44,16 @@ namespace MinotaurLabyrinth
         //so that the hereo cannot enter into these rooms
         public void DestoryRoom(Hero hero, Map map)
         {
-            var protentialToBeDestoryedRooms = GetProtentialToBeDestoryedRooms(hero, map);
+            List<Location> fireableLocations = GetFireableLocations(hero, map, _fireableDistance);
+            var protentialCanBeDestoryedRooms = GetProtentialCanBeDestoryedRooms(hero, map, fireableLocations);
 
-            if (protentialToBeDestoryedRooms.Count == 0)
+            if (protentialCanBeDestoryedRooms.Count == 0)
             {
                 HandleNoProtentialRoomCanBeDestoryed();
             }
             else
             {
-                HandleProtentialRoomsCanBeDestoryed(hero, map, protentialToBeDestoryedRooms);
+                HandleProtentialRoomsCanBeDestoryed(hero, map, protentialCanBeDestoryedRooms);
             }
         }
 
@@ -160,9 +161,8 @@ namespace MinotaurLabyrinth
             //_fireableDistance = Math.Clamp(_fireableDistance - 1, 1, _fireableDistance - 1);
         }
 
-        protected virtual List<Room> GetProtentialToBeDestoryedRooms(Hero hero, Map map)
+        protected virtual List<Room> GetProtentialCanBeDestoryedRooms(Hero hero, Map map, List<Location> fireableLocations)
         {
-            List<Location> fireableLocations = GetFireableLocations(hero, map, _fireableDistance);
             List<Room> protentialToBeDestoryedRooms = new List<Room>();
             foreach (var location in fireableLocations)
             {

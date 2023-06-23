@@ -50,7 +50,7 @@
         public RoomType GetRoomTypeAtLocation(Location location) => GetRoomAtLocation(location).Type;
 
         // Returns a reference to the room object at a specific location. If the location is off the map, a Wall will be returned
-        public Room GetRoomAtLocation(Location location) => IsOnMap(location) ? _rooms[location.Row, location.Column] : new Wall();
+        public virtual Room GetRoomAtLocation(Location location) => IsOnMap(location) ? _rooms[location.Row, location.Column] : new Wall();
 
         /// <summary>
         /// Checks if a given location has a neighboring location with the specified room type.
@@ -164,7 +164,7 @@
 
         //return the adjacent rooms(north, south, west, east) by the specify location
         //it should be return a wall room if the location not at the map
-        public List<Room> GetAdjacentRooms(Location location)
+        public virtual List<Room> GetAdjacentRooms(Location location)
         {
             Location north = new Location(location.Row - 1, location.Column);
             Location south = new Location(location.Row + 1, location.Column);
