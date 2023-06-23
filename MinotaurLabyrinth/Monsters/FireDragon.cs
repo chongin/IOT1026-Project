@@ -127,7 +127,7 @@ namespace MinotaurLabyrinth
             if (protentialLocations.Count == 0)
                 return null;
             else
-            { 
+            {
                 int index = RandomNumberGenerator.Next(0, protentialLocations.Count);
                 return protentialLocations[index];
             }

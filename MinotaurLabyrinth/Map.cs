@@ -172,7 +172,7 @@
             Location south = new Location(location.Row + 1, location.Column);
             Location west = new Location(location.Row, location.Column - 1);
             Location east = new Location(location.Row, location.Column + 1);
-            
+
             List<Room> rooms = new List<Room>();
             rooms.Add(GetRoomAtLocation(north));
             rooms.Add(GetRoomAtLocation(south));

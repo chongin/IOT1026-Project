@@ -235,7 +235,7 @@ namespace MinotaurLabyrinthTest
             Hero hero = new Hero(heroLocation);
 
             MethodInfo method = typeof(FireDragon).GetMethod("GetFireableLocations", BindingFlags.NonPublic | BindingFlags.Instance);
-            var locations = (List<Location>)method.Invoke(dragon, new Object[] { hero, map, 4});
+            var locations = (List<Location>)method.Invoke(dragon, new Object[] { hero, map, 4 });
             Assert.AreEqual(15, locations.Count);
 
             bool existHeroLocation = false;
@@ -286,7 +286,7 @@ namespace MinotaurLabyrinthTest
         public void Test_HandleProtentialRoomsCanBeDestoryed_SurroundByFire()
         {
             //MyExperience: even the class contruction function has the default parameter, also need to pass into the Object[], otherwise, cannot create a object.
-            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(1, 2), ConsoleColor.Cyan }) { CallBase = true};
+            var dragonMock = new Mock<FireDragon>(new Object[] { new Location(1, 2), ConsoleColor.Cyan }) { CallBase = true };
             Hero hero = new Hero(new Location(0, 1));
             Map map = new Map(4, 4);
 
@@ -336,7 +336,7 @@ namespace MinotaurLabyrinthTest
             MethodInfo method = typeof(FireDragon).GetMethod("InteractWithHeroInRoom", BindingFlags.NonPublic | BindingFlags.Instance);
 
             method.Invoke(dragonMock.Object, new Object[] { room, hero, map });
-            dragonMock.Protected().Verify("SwapToNewLocation", Times.Never(), new Object[] { map, room, new Location(3,3) });
+            dragonMock.Protected().Verify("SwapToNewLocation", Times.Never(), new Object[] { map, room, new Location(3, 3) });
         }
 
         [TestMethod]
@@ -355,7 +355,7 @@ namespace MinotaurLabyrinthTest
 
             method.Invoke(dragonMock.Object, new Object[] { room, hero, map });
             dragonMock.Protected().Verify("SwapToNewLocation", Times.Once(), new Object[] { map, room, location });
-            dragonMock.Protected().Verify("SummonChildMonster", Times.Once(), new Object[] { map});
+            dragonMock.Protected().Verify("SummonChildMonster", Times.Once(), new Object[] { map });
         }
 
         [TestMethod]
@@ -418,7 +418,7 @@ namespace MinotaurLabyrinthTest
 
             dragonMock.Object.DestoryRoom(hero, map);
             dragonMock.Protected().Verify("HandleNoProtentialRoomCanBeDestoryed", Times.Never(), new Object[] { });
-            dragonMock.Protected().Verify("HandleProtentialRoomsCanBeDestoryed", Times.Once(), new Object[] { hero,map,protentialRooms });
+            dragonMock.Protected().Verify("HandleProtentialRoomsCanBeDestoryed", Times.Once(), new Object[] { hero, map, protentialRooms });
         }
 
         [TestMethod]
@@ -457,7 +457,7 @@ namespace MinotaurLabyrinthTest
             dragonMock.Protected().Setup<Room>("DestoryDragonItSelfRoom", new Object[] { map }).Returns(room);
 
             dragonMock.Object.Activate(hero, map);
-            dragonMock.Protected().Verify("HandleHeroWasSurroundByFire", Times.Once(), new Object[]{ hero, map });
+            dragonMock.Protected().Verify("HandleHeroWasSurroundByFire", Times.Once(), new Object[] { hero, map });
             dragonMock.Protected().Verify("InteractWithHeroInRoom", Times.Never(), new Object[] { room, hero, map });
         }
 
