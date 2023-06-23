@@ -8,7 +8,7 @@ namespace MinotaurLabyrinth
         public const int MIN_FIREABLE_DISTANCE = 1;
         public const int MAX_FIREABLE_DISTANCE = 4;
 
-        private int _fireableDistance { get; set; }
+        private int _fireableDistance { get; set; } //MyExperience: here is use reflection, so it can use GetProperty method in test case
         private Location _location;
         private int _fireCount = 0;
         private ConsoleColor _displayColor;
@@ -173,7 +173,7 @@ namespace MinotaurLabyrinth
                 }
                 else
                 {
-                    Console.WriteLine($"This room is not available to destory row, cloumn: [{location.Row}, {location.Column}, type: {room.Type}, state: {room.State} Active:{room.IsActive}, Monster:{room._monster}]");
+                    //Console.WriteLine($"This room is not available to destory row, cloumn: [{location.Row}, {location.Column}, type: {room.Type}, state: {room.State} Active:{room.IsActive}, Monster:{room._monster}]");
                 }
             }
 
@@ -242,7 +242,7 @@ namespace MinotaurLabyrinth
         }
 
 
-        protected virtual void SwapToNewLocation(Map map, Room currentRoom,Location newLocation)
+        protected virtual void SwapToNewLocation(Map map, Room currentRoom, Location newLocation)
         {
             currentRoom.RemoveMonster();
             var newRoom = map.GetRoomAtLocation(newLocation);

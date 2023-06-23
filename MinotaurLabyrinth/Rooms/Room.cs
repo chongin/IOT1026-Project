@@ -10,7 +10,7 @@
             RoomFactory.Instance.Register(RoomType.Room, () => new Room());
         }
 
-        public Monster? _monster; //TODO just for debug, remember to change to private
+        private Monster? _monster; 
 
         public RoomState State { get; private set; } = RoomState.Normaled;
         public string _destoryReason = "";
