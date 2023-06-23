@@ -38,7 +38,10 @@
                 Console.Clear();
                 if (Hero.IsAlive) // Player did not quit the game
                 {
+                    var beforeCommandLocation = Hero.Location;
                     command.Execute(Hero, Map);
+                    var afterCommandLocation = Hero.Location;
+
                     Location currentLocation = Hero.Location;
                     CurrentRoom.Activate(Hero, Map);
                     // If the room interaction moves the player
@@ -56,7 +59,14 @@
 
                     if (command is BaseMoveCommand) // only excute when command is a BaseMoveCommand
                     {
-                        Map.ExcuteDestoryRooms(Hero);
+                        if (beforeCommandLocation == afterCommandLocation)
+                        {
+                            ConsoleHelper.WriteLine("The hero looks like he hit something mysterious and can't move a bit", ConsoleColor.Blue);
+                        }
+                        else 
+                        {
+                            Map.ExcuteDestoryRooms(Hero);
+                        }
                     }
                 }
                 Display.ScreenUpdate(Hero, Map);

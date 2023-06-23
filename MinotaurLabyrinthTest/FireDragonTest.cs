@@ -114,9 +114,7 @@ namespace MinotaurLabyrinthTest
 
             //MyExperience: ?? When I want to mock GetFireableLocations, it depends on its parameter value to find the collect method. I didn't understand how it works now, need to reasearch
             //for example if change the parameter 4 to 3, then the Setup method will be failed, it throws: System.Reflection.TargetInvocationException
-            dragonMock.Protected().Setup<List<Location>>("GetFireableLocations", new Object[] { hero, mapMock.Object, 4 }).Returns(mockLocations);
-
-
+            dragonMock.Protected().Setup<List<Location>>("GetFireableLocations", new Object[] { hero, mapMock.Object, FireDragon.MAX_FIREABLE_DISTANCE }).Returns(mockLocations);
 
             var method = typeof(FireDragon).GetMethod("GetProtentialCanBeDestoryedRooms", BindingFlags.NonPublic | BindingFlags.Instance);
             var rooms = (List<Room>)method.Invoke(dragonMock.Object, new Object[] { hero, mapMock.Object });

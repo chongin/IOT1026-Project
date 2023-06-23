@@ -5,8 +5,8 @@ namespace MinotaurLabyrinth
 {
     public class FireDragon : Monster, ISmasher
     {
-        public const int MIN_FIREABLE_DISTANCE = 1;
-        public const int MAX_FIREABLE_DISTANCE = 4;
+        public const int MIN_FIREABLE_DISTANCE = 2;
+        public const int MAX_FIREABLE_DISTANCE = 5;
 
         private int _fireableDistance { get; set; } //MyExperience: here is use reflection, so it can use GetProperty method in test case
         private Location _location;
