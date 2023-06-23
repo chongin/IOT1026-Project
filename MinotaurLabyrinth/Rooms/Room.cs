@@ -90,13 +90,13 @@
             }
         }
 
-        public void Destory(string reason)
+        public void DestoryBy(string reason)
         {
             State = RoomState.Destoryed;
             _destoryReason = reason;
         }
 
-        public bool CanOccupyByMonistor()
+        public bool CanOccupyByMonster()
         {//even the room was destoryed, the monster aslo can occupy, because the room was destoryed by dragon, so I think it make sense.
             if (_monster != null)
                 return false;

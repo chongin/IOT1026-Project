@@ -5,9 +5,10 @@ namespace MinotaurLabyrinth
 {
     public class FireDragon : Monster, ISmasher
     {
-        private const int MIN_FIREABLE_DISTANCE = 1;
-        private const int MAX_FIREABLE_DISTANCE = 4;
-        private int _fireableDistance = MAX_FIREABLE_DISTANCE; 
+        public const int MIN_FIREABLE_DISTANCE = 1;
+        public const int MAX_FIREABLE_DISTANCE = 4;
+
+        private int _fireableDistance { get; set; }
         private Location _location;
         int _fireCount = 0;
         private ConsoleColor _displayColor;
@@ -15,6 +16,7 @@ namespace MinotaurLabyrinth
         {
             _location = location;
             _displayColor = color;
+            _fireableDistance = MAX_FIREABLE_DISTANCE;
         }
 
         /// <summary>
@@ -26,7 +28,7 @@ namespace MinotaurLabyrinth
         public override void Activate(Hero hero, Map map)
         {
             var currentRoom = map.GetRoomAtLocation(_location);
-            currentRoom.Destory("Fire");
+            currentRoom.DestoryBy("Fire");
 
             //Check the hero already surround by fire.
             if (IsSurroundByFire(hero, map))
@@ -116,7 +118,7 @@ namespace MinotaurLabyrinth
                     }
                     var location = new Location(row, col);
                     var room = map.GetRoomAtLocation(location);
-                    if (room.CanOccupyByMonistor())
+                    if (room.CanOccupyByMonster())
                     {
                         protentialLocations.Add(location);
                     }
@@ -186,7 +188,7 @@ namespace MinotaurLabyrinth
         protected virtual void HandleProtentialRoomsCanBeDestoryed(Hero hero, Map map, List<Room> protentialToBeDestoryedRooms)
         {
             Room room = GetOneProtentialRoomCanBeDestoryed(protentialToBeDestoryedRooms);
-            room.Destory("Fire");
+            room.DestoryBy("Fire");
 
             if (IsSurroundByFire(hero, map))
             {
