@@ -8,7 +8,7 @@ namespace MinotaurLabyrinth
         public const int MIN_FIREABLE_DISTANCE = 2;
         public const int MAX_FIREABLE_DISTANCE = 5;
 
-        private int _fireableDistance { get; set; } //MyExperience: here is use reflection, so it can use GetProperty method in test case
+        private int _fireableDistance; // if you use { get; set; } MyExperience: here is use reflection, so it can use GetProperty method in test case
         private Location _location;
         private int _fireCount = 0;
         private ConsoleColor _displayColor;

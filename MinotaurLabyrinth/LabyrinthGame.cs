@@ -63,7 +63,7 @@
                         {
                             ConsoleHelper.WriteLine("The hero looks like he hit something mysterious and can't move a bit", ConsoleColor.Blue);
                         }
-                        else 
+                        else
                         {
                             Map.ExcuteDestoryRooms(Hero);
                         }

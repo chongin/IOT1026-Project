@@ -15,7 +15,7 @@ namespace MinotaurLabyrinthTest
             MethodInfo method = typeof(FireDragon).GetMethod("LevelUp", BindingFlags.NonPublic | BindingFlags.Instance);
             method.Invoke(dragon, new object[] { });
 
-            PropertyInfo property = typeof(FireDragon).GetProperty("_fireableDistance", BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo property = typeof(FireDragon).GetField("_fireableDistance", BindingFlags.NonPublic | BindingFlags.Instance);
             int val = (int)property.GetValue(dragon);
 
             Assert.AreEqual(FireDragon.MAX_FIREABLE_DISTANCE - 1, val);
