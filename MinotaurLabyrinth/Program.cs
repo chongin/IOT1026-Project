@@ -4,7 +4,7 @@
     {
         static void Main()
         {
-            ConsoleHelper.Write("Do you want to play a small, medium, or large game? ", ConsoleColor.Black);
+            ConsoleHelper.Write("Do you want to play a small, medium, or large game? ", ConsoleColor.White);
 
             // Default game setting in the event user does not input a proper size.
             Size mapSize = Console.ReadLine() switch

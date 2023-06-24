@@ -83,7 +83,7 @@
             ICommand? command = null;
             do
             {
-                ConsoleHelper.Write("What do you want to do? ", ConsoleColor.Black);
+                ConsoleHelper.Write("What do you want to do? ", ConsoleColor.White);
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 string? input = Console.ReadLine();
 
